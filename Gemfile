@@ -32,7 +32,8 @@ end
 group :test do
   gem "rspec-rails", "~> 2.14"
   gem "factory_girl_rails"
-  gem 'ffaker'
+  gem "ffaker"
+  gem "shoulda-matchers", "~> 3.1"
 end
 
 group :doc do
