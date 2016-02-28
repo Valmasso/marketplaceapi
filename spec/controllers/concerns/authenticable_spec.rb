@@ -36,4 +36,21 @@ describe Authenticable do
 
     it {  should respond_with 401 }
   end
+
+  describe "#user_signed_in?" do
+
+    context "when there is a user on 'session'" do
+      let(:user) { FactoryGirl.create :user }
+
+      before { authentication.stub(:current_user).and_return(user) }
+
+      it { should be_user_signed_in }
+    end
+
+    context "when there is no user on 'session'" do
+      before { authentication.stub(:current_user).and_return(nil) }
+
+      it { should_not be_user_signed_in }
+    end
+  end
 end
