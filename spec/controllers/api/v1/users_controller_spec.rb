@@ -49,9 +49,11 @@ describe Api::V1::UsersController do
   end
 
   describe "PUT/PATCH #update" do
-    context "when is successfully updated" do
-      let(:user) { FactoryGirl.create :user }
+    let(:user) { FactoryGirl.create :user }
 
+    before { request.headers['Authorization'] =  user.auth_token }
+
+    context "when is successfully updated" do
       before do
         patch :update, { id: user.id,
                          user: { email: "newmail@example.com" } }, format: :json
@@ -66,8 +68,6 @@ describe Api::V1::UsersController do
     end
 
     context "when is not created" do
-      let(:user) { FactoryGirl.create :user }
-
       before do
         patch :update, { id: user.id,
                          user: { email: "bademail.com" } }, format: :json
@@ -90,7 +90,10 @@ describe Api::V1::UsersController do
   describe "DELETE #destroy" do
     let(:user) { FactoryGirl.create :user }
 
-    before { delete :destroy, { id: user.id }, format: :json }
+    before do
+      api_authorization_header user.auth_token
+      delete :destroy, id: user.auth_token
+    end
 
     it { should respond_with 204 }
   end
