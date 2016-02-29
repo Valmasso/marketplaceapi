@@ -4,6 +4,7 @@ class Order < ActiveRecord::Base
   has_many :products, through: :placements
 
   validates :user_id, presence: true
+  validates_with EnoughProductsValidator #this is the line we added for the custom validator
 
   before_validation :set_total!
 
