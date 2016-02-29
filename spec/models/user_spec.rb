@@ -19,6 +19,7 @@ describe User, type: :model do
   it { should be_valid }
 
   it { should have_many(:products) }
+  it { should have_many(:orders) }
 
   describe "when email is not present" do
     before { user.email = " " }
