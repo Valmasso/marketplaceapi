@@ -38,6 +38,7 @@ group :test do
   gem "rspec-rails", "~> 2.14"
   gem "shoulda-matchers", "~> 3.1"
   gem "database_cleaner"
+  gem "email_spec"
 end
 
 group :development, :test do
