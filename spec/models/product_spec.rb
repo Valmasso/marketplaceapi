@@ -17,4 +17,53 @@ describe Product, type: :model do
   it { should validate_presence_of :user_id }
 
   it { should belong_to :user }
+
+  context 'Searching products' do
+    let!(:product1) { FactoryGirl.create :product, title: "A plasma TV", price: 100 }
+    let!(:product2) { FactoryGirl.create :product, title: "Fastest Laptop", price: 50 }
+    let!(:product3) { FactoryGirl.create :product, title: "CD player", price: 150 }
+    let!(:product4) { FactoryGirl.create :product, title: "LCD TV", price: 99 }
+
+    context 'By keyword' do
+      describe ".filter_by_title" do
+        context "when a 'TV' title pattern is sent" do
+          it "returns the 2 products matching" do
+            expect(Product.filter_by_title("TV").size).to eql(2)
+          end
+
+          it "returns the products matching" do
+            expect(Product.filter_by_title("TV").sort).to match_array([product1, product4])
+          end
+        end
+      end
+    end
+
+    context 'By price' do
+      describe ".above_or_equal_to_price" do
+        it "returns the products which are above or equal to the price" do
+          expect(Product.above_or_equal_to_price(100).sort).to match_array([product1, product3])
+        end
+      end
+
+      describe ".below_or_equal_to_price" do
+        it "returns the products which are above or equal to the price" do
+          expect(Product.below_or_equal_to_price(99).sort).to match_array([product2, product4])
+        end
+      end
+    end
+
+    context 'Sort by creation' do
+      describe ".recent" do
+        before do
+          #we will touch some products to update them
+          product2.touch
+          product3.touch
+        end
+
+        it "returns the most updated records" do
+          expect(Product.recent).to match_array([product3, product2, product4, product1])
+        end
+      end
+    end
+  end
 end
